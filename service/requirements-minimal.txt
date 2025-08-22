@@ -1,0 +1,8 @@
+# Minimal requirements for the service (without audio processing)
+fastapi
+uvicorn
+python-multipart
+pydantic
+requests
+python-dotenv
+numpy

@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS script_lines (
+    id VARCHAR(36) PRIMARY KEY,
+    script_id VARCHAR(36) NOT NULL,
+    speaker_id VARCHAR(36) NOT NULL,
+    text TEXT NOT NULL,
+    duration DECIMAL(8,2),
+    line_order INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (script_id) REFERENCES scripts(id) ON DELETE CASCADE,
+    FOREIGN KEY (speaker_id) REFERENCES speakers(id) ON DELETE CASCADE
+);

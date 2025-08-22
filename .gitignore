@@ -1,0 +1,142 @@
+# Dependencies and node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# React/Vite build outputs (voice-generator frontend)
+voice-generator/dist/
+voice-generator/build/
+voice-generator/.vite/
+voice-generator/.env.local
+voice-generator/.env.development.local
+voice-generator/.env.test.local
+voice-generator/.env.production.local
+
+# PHP/Composer (backend)
+backend/vendor/
+backend/composer.lock
+backend/.env
+backend/.env.local
+
+# Python service
+service/__pycache__/
+service/*.pyc
+service/*.pyo
+service/*.pyd
+service/.Python
+service/env/
+service/venv/
+service/.venv/
+service/pip-log.txt
+service/pip-delete-this-directory.txt
+service/.env
+service/.env.local
+
+# Audio/Upload files
+backend/uploads/
+service/uploads/
+uploads/
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.flac
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Model files and caches (if any large ML models are downloaded)
+*.bin
+*.safetensors
+models/
+checkpoints/
+cache/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# pytest
+.pytest_cache/
+.coverage
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ESLint cache
+.eslintcache
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
