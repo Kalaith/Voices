@@ -1,140 +1,193 @@
 <?php
+declare(strict_types=1);
 
-namespace VoiceGenerator\Controllers;
+namespace App\Controllers;
 
-use VoiceGenerator\Models\AudioGeneration;
-use VoiceGenerator\Services\AudioGenerationService;
-use Exception;
+use App\Actions\CreateAudioGenerationAction;
+use App\Actions\GetAudioGenerationAction;
+use App\Actions\UpdateAudioGenerationAction;
+use App\Actions\DeleteAudioGenerationAction;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class AudioController {
-    private $audioModel;
-    private $audioService;
+final class AudioController
+{
+    public function __construct(
+        private readonly CreateAudioGenerationAction $createAudioAction,
+        private readonly GetAudioGenerationAction $getAudioAction,
+        private readonly UpdateAudioGenerationAction $updateAudioAction,
+        private readonly DeleteAudioGenerationAction $deleteAudioAction
+    ) {}
 
-    public function __construct() {
-        $this->audioModel = new AudioGeneration();
-        $this->audioService = new AudioGenerationService();
-    }
-
-    public function getAll(): void {
+    public function getAll(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
         try {
-            $generations = $this->audioModel->getAll();
-            $this->jsonResponse($generations);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to fetch audio generations', 500);
+            $generations = $this->getAudioAction->getAll();
+            
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'data' => $generations
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Failed to fetch audio generations'
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
-    public function getById(string $id): void {
+    public function getById(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
         try {
-            $generation = $this->audioModel->getById($id);
+            $id = $args['id'];
+            $generation = $this->getAudioAction->getById($id);
+            
             if (!$generation) {
-                $this->errorResponse('Audio generation not found', 404);
-                return;
+                $response->getBody()->write(json_encode([
+                    'success' => false,
+                    'error' => 'Audio generation not found'
+                ]));
+                
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
             }
-            $this->jsonResponse($generation);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to fetch audio generation', 500);
+            
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'data' => $generation->toArray()
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Failed to fetch audio generation'
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
-    public function getByScriptId(string $scriptId): void {
+    public function create(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
         try {
-            $generations = $this->audioModel->getByScriptId($scriptId);
-            $this->jsonResponse($generations);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to fetch audio generations', 500);
+            $data = json_decode($request->getBody()->getContents(), true);
+            
+            $result = $this->createAudioAction->execute($data['scriptId']);
+            
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'data' => $result
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+        } catch (\InvalidArgumentException $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Failed to start audio generation'
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
-    public function create(): void {
+    public function generateSimple(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = json_decode($request->getBody()->getContents(), true);
             
-            if (!isset($data['scriptId'])) {
-                $this->errorResponse('Script ID is required', 400);
-                return;
-            }
-
-            $result = $this->audioService->generateScriptAudio($data['scriptId']);
+            $result = $this->createAudioAction->executeSimple($data['text'], $data['voice']);
             
-            if (isset($result['error'])) {
-                $this->errorResponse($result['error'], 500);
-                return;
-            }
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'data' => $result
+            ]));
             
-            $this->jsonResponse($result, 201);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to start audio generation', 500);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+        } catch (\InvalidArgumentException $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Failed to generate audio'
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
-    public function generateSimple(): void {
+    public function updateStatus(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $id = $args['id'];
+            $data = json_decode($request->getBody()->getContents(), true);
             
-            if (!isset($data['text']) || !isset($data['voice'])) {
-                $this->errorResponse('Text and voice are required', 400);
-                return;
-            }
-
-            $result = $this->audioService->generateSimpleAudio($data['text'], $data['voice']);
+            $generation = $this->updateAudioAction->execute($id, $data['status'], $data);
             
-            if (isset($result['error'])) {
-                $this->errorResponse($result['error'], 500);
-                return;
-            }
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'data' => $generation->toArray()
+            ]));
             
-            $this->jsonResponse($result, 201);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to generate audio', 500);
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\InvalidArgumentException $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Failed to update audio generation'
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
-    public function updateStatus(string $id): void {
+    public function delete(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $id = $args['id'];
+            $this->deleteAudioAction->execute($id);
             
-            if (!isset($data['status'])) {
-                $this->errorResponse('Status is required', 400);
-                return;
-            }
-
-            $success = $this->audioModel->updateStatus($id, $data['status'], $data);
-            if (!$success) {
-                $this->errorResponse('Audio generation not found', 404);
-                return;
-            }
-
-            $generation = $this->audioModel->getById($id);
-            $this->jsonResponse($generation);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to update audio generation', 500);
-        }
-    }
-
-    public function delete(string $id): void {
-        try {
-            $success = $this->audioModel->delete($id);
-            if (!$success) {
-                $this->errorResponse('Audio generation not found', 404);
-                return;
-            }
+            $response->getBody()->write(json_encode([
+                'success' => true,
+                'message' => 'Audio generation deleted successfully'
+            ]));
             
-            $this->jsonResponse(['message' => 'Audio generation deleted successfully']);
-        } catch (Exception $e) {
-            $this->errorResponse('Failed to delete audio generation', 500);
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\InvalidArgumentException $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Failed to delete audio generation'
+            ]));
+            
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
-    }
-
-    private function jsonResponse($data, int $status = 200): void {
-        http_response_code($status);
-        header('Content-Type: application/json');
-        echo json_encode($data);
-    }
-
-    private function errorResponse(string $message, int $status = 400): void {
-        http_response_code($status);
-        header('Content-Type: application/json');
-        echo json_encode(['error' => $message]);
     }
 }
