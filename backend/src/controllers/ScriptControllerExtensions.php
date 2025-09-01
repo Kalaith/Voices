@@ -1,6 +1,7 @@
 <?php
 
-require_once dirname(__DIR__) . '/config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
+use VoiceGenerator\Config\Database;
 
 /**
  * Extensions to the ScriptController for video generation functionality
@@ -10,7 +11,7 @@ class ScriptControllerExtensions {
     private $db;
     
     public function __construct($database = null) {
-        $this->db = $database ?? (new Database())->getConnection();
+        $this->db = $database ?? Database::getInstance()->getConnection();
     }
     
     /**

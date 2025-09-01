@@ -13,6 +13,7 @@ import {
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { ProgressBar } from './ui/ProgressBar';
+import { apiService } from '../lib/services/apiService';
 
 interface VideoProjectCreatorProps {
   onProjectCreated?: (project: VideoProject) => void;
@@ -44,10 +45,9 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
 
   const fetchScripts = async () => {
     try {
-      const response = await fetch('/api/scripts');
-      if (!response.ok) throw new Error('Failed to fetch scripts');
-      const data = await response.json();
-      setScripts(data);
+      const response = await apiService.get<Script[]>('/scripts');
+      if (response.error) throw new Error(response.error);
+      setScripts(response.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch scripts');
     }
@@ -56,18 +56,17 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/video/projects');
-      if (!response.ok) throw new Error('Failed to fetch projects');
-      const data = await response.json();
+      const response = await apiService.get<VideoProject[]>('/video/projects');
+      if (response.error) throw new Error(response.error);
+      const data = response.data || [];
       setProjects(data);
       
       // Fetch stats for each project
       const statsPromises = data.map(async (project: VideoProject) => {
         try {
-          const statsResponse = await fetch(`/api/video/projects/${project.id}/stats`);
-          if (statsResponse.ok) {
-            const stats = await statsResponse.json();
-            return { projectId: project.id, stats };
+          const statsResponse = await apiService.get<ProjectStats>(`/video/projects/${project.id}/stats`);
+          if (statsResponse.data) {
+            return { projectId: project.id, stats: statsResponse.data };
           }
         } catch (err) {
           console.error(`Failed to fetch stats for project ${project.id}:`, err);
@@ -101,22 +100,18 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
       setLoading(true);
       setError(null);
 
-      const response = await fetch('/api/video/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProject)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create project');
+      const response = await apiService.post<VideoProject>('/video/projects', newProject);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      const project = await response.json();
+      const project = response.data;
       setIsCreating(false);
       setNewProject({ name: '', script_id: 0, resolution: '1080p', background_style: 'anime' });
       fetchProjects();
-      onProjectCreated?.(project);
+      if (project) {
+        onProjectCreated?.(project);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
@@ -131,13 +126,9 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
 
     try {
       setLoading(true);
-      const response = await fetch(`/api/video/projects/${project.id}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete project');
+      const response = await apiService.delete(`/video/projects/${project.id}`);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
       fetchProjects();

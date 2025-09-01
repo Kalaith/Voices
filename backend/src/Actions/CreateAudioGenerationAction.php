@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace VoiceGenerator\Actions;
 
-use App\External\AudioGenerationRepository;
-use App\Models\AudioGeneration;
-use App\Services\AudioGenerationService;
+use VoiceGenerator\External\AudioGenerationRepository;
+use VoiceGenerator\Models\AudioGeneration;
+use VoiceGenerator\Services\AudioGenerationService;
 
 final class CreateAudioGenerationAction
 {

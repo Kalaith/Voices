@@ -15,43 +15,40 @@ class AudioGenerationService {
 
     public function generateScriptAudio(string $scriptId): array {
         try {
-            $scriptModel = new Script();
-            $voiceModel = new Voice();
-            $audioModel = new AudioGeneration();
-
             // Get script data
-            $script = $scriptModel->getById($scriptId);
+            $script = Script::find($scriptId);
             if (!$script) {
-                throw new Exception("Script not found");
+                throw new \Exception("Script not found");
             }
 
             // Get all voices
-            $voices = $voiceModel->getAll();
+            $voices = Voice::all();
 
             // Create audio generation record
             $audioGenerationId = uniqid('audio_');
-            $audioModel->create([
+            $audioGeneration = AudioGeneration::create([
                 'id' => $audioGenerationId,
-                'scriptId' => $scriptId,
+                'script_id' => $scriptId,
                 'status' => 'pending'
             ]);
 
             // Send request to service
             $response = $this->callService('/generate/script', [
-                'script' => $script,
-                'voices' => $voices,
+                'script' => $script->toArray(),
+                'voices' => $voices->toArray(),
                 'combine_audio' => true
             ]);
 
             if (isset($response['error'])) {
-                $audioModel->updateStatus($audioGenerationId, 'error', [
-                    'error' => $response['error']
+                $audioGeneration->update([
+                    'status' => 'error',
+                    'error_message' => $response['error']
                 ]);
                 return ['error' => $response['error']];
             }
 
             // Update status to generating
-            $audioModel->updateStatus($audioGenerationId, 'generating');
+            $audioGeneration->update(['status' => 'generating']);
 
             // Return generation info
             return [
@@ -60,10 +57,11 @@ class AudioGenerationService {
                 'status' => 'generating'
             ];
 
-        } catch (Exception $e) {
-            if (isset($audioGenerationId)) {
-                $audioModel->updateStatus($audioGenerationId, 'error', [
-                    'error' => $e->getMessage()
+        } catch (\Exception $e) {
+            if (isset($audioGeneration)) {
+                $audioGeneration->update([
+                    'status' => 'error',
+                    'error_message' => $e->getMessage()
                 ]);
             }
             return ['error' => $e->getMessage()];
@@ -75,9 +73,22 @@ class AudioGenerationService {
             // Increase PHP execution time limit for long generations
             set_time_limit(600); // 10 minutes
             
+            // Format voice data for Python service - it expects nested parameters structure
+            $formattedVoice = [
+                'id' => $voice['id'] ?? 'default',
+                'name' => $voice['name'] ?? 'Default Voice',
+                'parameters' => [
+                    'speed' => $voice['speed'] ?? 1.0,
+                    'pitch' => $voice['pitch'] ?? 1.0,
+                    'temperature' => $voice['temperature'] ?? 0.3,
+                    'top_p' => $voice['top_p'] ?? 0.7,
+                    'top_k' => $voice['top_k'] ?? 50,
+                ]
+            ];
+            
             $response = $this->callService('/generate', [
                 'text' => $text,
-                'voice' => $voice
+                'voice' => $formattedVoice
             ]);
 
             if (isset($response['error'])) {
@@ -112,7 +123,7 @@ class AudioGenerationService {
 
             return $response;
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
     }
@@ -120,9 +131,17 @@ class AudioGenerationService {
     public function getGenerationStatus(string $serviceId): ?array {
         try {
             return $this->callService("/generate/{$serviceId}", null, 'GET');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
+    }
+
+    public function generateSimple(string $text, array $voice): array {
+        return $this->generateSimpleAudio($text, $voice);
+    }
+
+    public function createGeneration(string $scriptId): array {
+        return $this->generateScriptAudio($scriptId);
     }
 
     public function checkServiceHealth(): array {
@@ -173,16 +192,16 @@ class AudioGenerationService {
         curl_close($curl);
         
         if ($error) {
-            throw new Exception("Service communication error: {$error}");
+            throw new \Exception("Service communication error: {$error}");
         }
         
         if ($httpCode >= 400) {
-            throw new Exception("Service error: HTTP {$httpCode}");
+            throw new \Exception("Service error: HTTP {$httpCode}");
         }
         
         $decoded = json_decode($response, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception("Invalid JSON response from service");
+            throw new \Exception("Invalid JSON response from service");
         }
         
         return $decoded;

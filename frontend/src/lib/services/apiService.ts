@@ -24,8 +24,15 @@ class ApiService {
         return { error: errorData.error || `HTTP ${response.status}` };
       }
 
-      const data = await response.json();
-      return { data };
+      const responseData = await response.json();
+      
+      // Handle backend response format: {"success": true, "data": [...]}
+      if (responseData.success && responseData.data !== undefined) {
+        return { data: responseData.data };
+      }
+      
+      // Handle direct data response
+      return { data: responseData };
     } catch (error) {
       return { error: error instanceof Error ? error.message : 'Network error' };
     }

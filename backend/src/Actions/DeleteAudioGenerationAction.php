@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace VoiceGenerator\Actions;
 
-use App\External\AudioGenerationRepository;
+use VoiceGenerator\External\AudioGenerationRepository;
 
 final class DeleteAudioGenerationAction
 {

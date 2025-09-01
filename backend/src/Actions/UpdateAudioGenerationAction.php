@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace VoiceGenerator\Actions;
 
-use App\External\AudioGenerationRepository;
-use App\Models\AudioGeneration;
+use VoiceGenerator\External\AudioGenerationRepository;
+use VoiceGenerator\Models\AudioGeneration;
 
 final class UpdateAudioGenerationAction
 {

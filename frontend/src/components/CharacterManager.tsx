@@ -3,6 +3,7 @@ import { Character, CreateCharacterRequest, CharacterExpression, CreateCharacter
 import { Voice } from '../types/voice';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
+import { apiService } from '../lib/services/apiService';
 
 interface CharacterManagerProps {
   onCharacterSelect?: (character: Character) => void;
@@ -33,10 +34,9 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
   const fetchCharacters = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/characters');
-      if (!response.ok) throw new Error('Failed to fetch characters');
-      const data = await response.json();
-      setCharacters(data);
+      const response = await apiService.get<Character[]>('/characters');
+      if (response.error) throw new Error(response.error);
+      setCharacters(response.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch characters');
     } finally {
@@ -46,10 +46,9 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
 
   const fetchVoices = async () => {
     try {
-      const response = await fetch('/api/voices');
-      if (!response.ok) throw new Error('Failed to fetch voices');
-      const data = await response.json();
-      setVoices(data);
+      const response = await apiService.get<Voice[]>('/voices');
+      if (response.error) throw new Error(response.error);
+      setVoices(response.data || []);
     } catch (err) {
       console.error('Failed to fetch voices:', err);
     }
@@ -57,10 +56,9 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
 
   const fetchCharacterExpressions = async (characterId: number) => {
     try {
-      const response = await fetch(`/api/characters/${characterId}/expressions`);
-      if (!response.ok) throw new Error('Failed to fetch expressions');
-      const data = await response.json();
-      setExpressions(data);
+      const response = await apiService.get<CharacterExpression[]>(`/characters/${characterId}/expressions`);
+      if (response.error) throw new Error(response.error);
+      setExpressions(response.data || []);
     } catch (err) {
       console.error('Failed to fetch expressions:', err);
     }
@@ -76,15 +74,9 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
       setLoading(true);
       setError(null);
       
-      const response = await fetch('/api/characters', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCharacter)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create character');
+      const response = await apiService.post<Character>('/characters', newCharacter);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
       setIsCreating(false);
@@ -104,20 +96,15 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/characters/${editingCharacter.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: editingCharacter.name,
-          description: editingCharacter.description,
-          voice_profile_id: editingCharacter.voice_profile_id,
-          base_portrait_url: editingCharacter.base_portrait_url
-        })
+      const response = await apiService.put<Character>(`/characters/${editingCharacter.id}`, {
+        name: editingCharacter.name,
+        description: editingCharacter.description,
+        voice_profile_id: editingCharacter.voice_profile_id,
+        base_portrait_url: editingCharacter.base_portrait_url
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update character');
+      if (response.error) {
+        throw new Error(response.error);
       }
 
       setEditingCharacter(null);
@@ -138,13 +125,9 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/characters/${character.id}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete character');
+      const response = await apiService.delete(`/characters/${character.id}`);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
       fetchCharacters();
@@ -169,15 +152,13 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
     if (!selectedCharacter) return;
 
     try {
-      const response = await fetch(`/api/characters/${selectedCharacter.id}/expressions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emotion, expression_prompt: expressionPrompt })
+      const response = await apiService.post<CharacterExpression>(`/characters/${selectedCharacter.id}/expressions`, {
+        emotion,
+        expression_prompt: expressionPrompt
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update expression');
+      if (response.error) {
+        throw new Error(response.error);
       }
 
       fetchCharacterExpressions(selectedCharacter.id);

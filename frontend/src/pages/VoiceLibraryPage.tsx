@@ -140,37 +140,37 @@ export function VoiceLibraryPage() {
                 <div className="space-y-3">
                   <ParameterBar
                     label="Speed"
-                    value={voice.parameters.speed}
+                    value={voice.speed || 1.0}
                     maxValue={2}
                     size="sm"
                   />
                   <ParameterBar
                     label="Pitch"
-                    value={voice.parameters.pitch}
+                    value={voice.pitch || 1.0}
                     maxValue={2}
                     size="sm"
                   />
                   <ParameterBar
                     label="Temperature"
-                    value={voice.parameters.temperature}
+                    value={voice.temperature || 0.5}
                     maxValue={1}
                     size="sm"
                   />
                   <ParameterBar
                     label="Top P"
-                    value={voice.parameters.top_p}
+                    value={voice.top_p || 0.8}
                     maxValue={1}
                     size="sm"
                   />
                   <ParameterBar
                     label="Top K"
-                    value={voice.parameters.top_k}
-                    maxValue={20}
+                    value={voice.top_k || 50}
+                    maxValue={100}
                     size="sm"
                   />
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-500">Seed:</span>
-                    <span className="font-medium text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">{voice.parameters.seed || 2024}</span>
+                    <span className="font-medium text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">{voice.seed || 2024}</span>
                   </div>
                 </div>
 

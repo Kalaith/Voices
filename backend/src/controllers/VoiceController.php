@@ -14,85 +14,143 @@ class VoiceController {
 
     public function getAll(): void {
         try {
-            $voices = $this->voiceModel->getAll();
-            $this->jsonResponse($voices);
+            header('Content-Type: application/json');
+            
+            $voices = Voice::all();
+            echo json_encode([
+                'success' => true,
+                'data' => $voices->toArray()
+            ]);
         } catch (Exception $e) {
-            $this->errorResponse('Failed to fetch voices', 500);
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to fetch voices'
+            ]);
         }
     }
 
     public function getById(string $id): void {
         try {
-            $voice = $this->voiceModel->getById($id);
+            header('Content-Type: application/json');
+            
+            $voice = Voice::find($id);
             if (!$voice) {
-                $this->errorResponse('Voice not found', 404);
+                http_response_code(404);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Voice not found'
+                ]);
                 return;
             }
-            $this->jsonResponse($voice);
+
+            echo json_encode([
+                'success' => true,
+                'data' => $voice->toArray()
+            ]);
         } catch (Exception $e) {
-            $this->errorResponse('Failed to fetch voice', 500);
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to fetch voice'
+            ]);
         }
     }
 
     public function create(): void {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $input = json_decode(file_get_contents('php://input'), true);
             
-            if (!isset($data['name'])) {
-                $this->errorResponse('Voice name is required', 400);
+            if (!isset($input['name'])) {
+                http_response_code(400);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Voice name is required'
+                ]);
                 return;
             }
 
-            $data['id'] = $data['id'] ?? uniqid('voice_');
-            $id = $this->voiceModel->create($data);
-            $voice = $this->voiceModel->getById($id);
+            $input['id'] = $input['id'] ?? uniqid('voice_');
+            $voice = Voice::create($input);
             
-            $this->jsonResponse($voice, 201);
+            header('Content-Type: application/json');
+            http_response_code(201);
+            echo json_encode([
+                'success' => true,
+                'data' => $voice->toArray()
+            ]);
         } catch (Exception $e) {
-            $this->errorResponse('Failed to create voice', 500);
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to create voice'
+            ]);
         }
     }
 
     public function update(string $id): void {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $input = json_decode(file_get_contents('php://input'), true);
             
-            $success = $this->voiceModel->update($id, $data);
-            if (!$success) {
-                $this->errorResponse('Voice not found or no changes made', 404);
+            $voice = Voice::find($id);
+            if (!$voice) {
+                http_response_code(404);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Voice not found'
+                ]);
                 return;
             }
 
-            $voice = $this->voiceModel->getById($id);
-            $this->jsonResponse($voice);
+            $voice->update($input);
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'data' => $voice->fresh()->toArray()
+            ]);
         } catch (Exception $e) {
-            $this->errorResponse('Failed to update voice', 500);
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to update voice'
+            ]);
         }
     }
 
     public function delete(string $id): void {
         try {
-            $success = $this->voiceModel->delete($id);
-            if (!$success) {
-                $this->errorResponse('Voice not found', 404);
+            $voice = Voice::find($id);
+            if (!$voice) {
+                http_response_code(404);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Voice not found'
+                ]);
                 return;
             }
+
+            $voice->delete();
             
-            $this->jsonResponse(['message' => 'Voice deleted successfully']);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'message' => 'Voice deleted successfully'
+            ]);
         } catch (Exception $e) {
-            $this->errorResponse('Failed to delete voice', 500);
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to delete voice'
+            ]);
         }
-    }
-
-    private function jsonResponse($data, int $status = 200): void {
-        http_response_code($status);
-        header('Content-Type: application/json');
-        echo json_encode($data);
-    }
-
-    private function errorResponse(string $message, int $status = 400): void {
-        http_response_code($status);
-        header('Content-Type: application/json');
-        echo json_encode(['error' => $message]);
     }
 }

@@ -3,9 +3,9 @@
 // Video Generation API Routes
 // This file contains all the new routes for video generation functionality
 
-require_once dirname(__DIR__) . '/controllers/CharacterController.php';
-require_once dirname(__DIR__) . '/controllers/VideoProjectController.php';
-require_once dirname(__DIR__) . '/controllers/ScriptControllerExtensions.php';
+require_once __DIR__ . '/../controllers/CharacterController.php';
+require_once __DIR__ . '/../controllers/VideoProjectController.php'; 
+require_once __DIR__ . '/../controllers/ScriptControllerExtensions.php';
 
 // Initialize controllers
 $characterController = new CharacterController();

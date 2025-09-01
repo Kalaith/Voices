@@ -33,7 +33,7 @@ export const VoiceLibrary: React.FC<VoiceLibraryProps> = ({ voices, onVoiceCreat
                 <div className="text-sm text-gray-600 mt-1">{voice.description}</div>
               )}
               <div className="text-xs text-gray-500 mt-2">
-                Speed: {voice.parameters.speed}, Pitch: {voice.parameters.pitch}
+                Speed: {voice.speed || 1.0}, Pitch: {voice.pitch || 1.0}
               </div>
             </div>
           ))}

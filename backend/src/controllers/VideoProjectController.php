@@ -1,12 +1,13 @@
 <?php
 
-require_once dirname(__DIR__) . '/config/Database.php';
+require_once __DIR__ . '/../config/Database.php';
+use VoiceGenerator\Config\Database;
 
 class VideoProjectController {
     private $db;
     
     public function __construct($database = null) {
-        $this->db = $database ?? (new Database())->getConnection();
+        $this->db = $database ?? Database::getInstance()->getConnection();
     }
     
     public function createProject() {

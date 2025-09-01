@@ -3,10 +3,11 @@ import { VoiceLibraryPage } from './pages/VoiceLibraryPage';
 import { ScriptManagerPage } from './pages/ScriptManagerPage';
 import { VoiceGeneratorPage } from './pages/VoiceGeneratorPage';
 import { VoiceTestingLabPage } from './pages/VoiceTestingLabPage';
+import { VideoManagerPage } from './pages/VideoManagerPage';
 import { Button } from './components/ui/Button';
 import { TTSEngineSelector } from './components/TTSEngineSelector';
 
-type TabType = 'voices' | 'scripts' | 'generator' | 'testing';
+type TabType = 'voices' | 'scripts' | 'generator' | 'testing' | 'video';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('voices');
@@ -17,6 +18,7 @@ function App() {
     { id: 'testing' as TabType, label: 'Voice Testing Lab', icon: '🧪' },
     { id: 'scripts' as TabType, label: 'Script Manager', icon: '📝' },
     { id: 'generator' as TabType, label: 'Audio Generator', icon: '🎵' },
+    { id: 'video' as TabType, label: 'Video Studio', icon: '🎬' },
   ];
 
   return (
@@ -80,6 +82,9 @@ function App() {
           </div>
           <div role="tabpanel" aria-labelledby={`tab-${activeTab}`} className={activeTab === 'generator' ? '' : 'hidden'}>
             {activeTab === 'generator' && <VoiceGeneratorPage />}
+          </div>
+          <div role="tabpanel" aria-labelledby={`tab-${activeTab}`} className={activeTab === 'video' ? '' : 'hidden'}>
+            {activeTab === 'video' && <VideoManagerPage />}
           </div>
         </main>
       </div>

@@ -15,6 +15,7 @@ import {
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { ProgressBar } from './ui/ProgressBar';
+import { apiService } from '../lib/services/apiService';
 
 interface VideoScriptEditorProps {
   scriptId: number;
@@ -41,11 +42,11 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
   const fetchScriptData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/scripts/${scriptId}/video-data`);
-      if (!response.ok) throw new Error('Failed to fetch script data');
-      const data = await response.json();
-      setScriptData(data);
-      onScriptChange?.(data.lines || []);
+      const response = await apiService.get<ScriptWithVideoData>(`/scripts/${scriptId}/video-data`);
+      if (response.error) throw new Error(response.error);
+      const data = response.data;
+      setScriptData(data || null);
+      onScriptChange?.(data?.lines || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch script data');
     } finally {
@@ -55,10 +56,9 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
 
   const fetchCharacters = async () => {
     try {
-      const response = await fetch('/api/characters');
-      if (!response.ok) throw new Error('Failed to fetch characters');
-      const data = await response.json();
-      setCharacters(data);
+      const response = await apiService.get<Character[]>('/characters');
+      if (response.error) throw new Error(response.error);
+      setCharacters(response.data || []);
     } catch (err) {
       console.error('Failed to fetch characters:', err);
     }
@@ -66,10 +66,9 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
 
   const fetchReadinessScore = async () => {
     try {
-      const response = await fetch(`/api/scripts/${scriptId}/readiness`);
-      if (response.ok) {
-        const data = await response.json();
-        setReadiness(data);
+      const response = await apiService.get<ScriptReadiness>(`/scripts/${scriptId}/readiness`);
+      if (response.data) {
+        setReadiness(response.data);
       }
     } catch (err) {
       console.error('Failed to fetch readiness score:', err);
@@ -78,18 +77,12 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
 
   const updateScriptLine = async (lineId: number, updates: UpdateScriptLineRequest) => {
     try {
-      const response = await fetch(`/api/script-lines/${lineId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update script line');
+      const response = await apiService.put<VideoScriptLine>(`/script-lines/${lineId}`, updates);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      const updatedLine = await response.json();
+      const updatedLine = response.data;
       
       // Update the line in our local state
       setScriptData(prev => {
@@ -121,17 +114,14 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
   const autoGenerateSceneData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/scripts/${scriptId}/auto-generate-scenes`, {
-        method: 'POST'
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate scene data');
+      const response = await apiService.post<any>(`/scripts/${scriptId}/auto-generate-scenes`, {});
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      fetchScriptData();
-      fetchReadinessScore();
+      // Refresh script data after generation
+      await fetchScriptData();
+      await fetchReadinessScore();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate scene data');
     } finally {

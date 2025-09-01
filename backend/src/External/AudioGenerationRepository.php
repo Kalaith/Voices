@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\External;
+namespace VoiceGenerator\External;
 
-use App\Models\AudioGeneration;
+use VoiceGenerator\Models\AudioGeneration;
 
 final class AudioGenerationRepository
 {

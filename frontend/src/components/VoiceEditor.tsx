@@ -17,15 +17,13 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
   const [formData, setFormData] = useState({
     name: voice.name,
     description: voice.description || '',
-    parameters: {
-      speed: voice.parameters.speed || 1.0,
-      pitch: voice.parameters.pitch || 1.0,
-      temperature: voice.parameters.temperature || 0.3,
-      top_p: voice.parameters.top_p || 0.7,
-      top_k: voice.parameters.top_k || 20,
-      seed: voice.parameters.seed || 2024,
-      batch_size: voice.parameters.batch_size || 1,
-    }
+    speed: voice.speed || 1.0,
+    pitch: voice.pitch || 1.0,
+    temperature: voice.temperature || 0.3,
+    top_p: voice.top_p || 0.7,
+    top_k: voice.top_k || 20,
+    seed: voice.seed || 2024,
+    batch_size: voice.batch_size || 1,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,20 +34,15 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
   const handleParameterChange = (param: string, value: number) => {
     setFormData(prev => ({
       ...prev,
-      parameters: {
-        ...prev.parameters,
-        [param]: value
-      }
+      [param]: value
     }));
   };
 
   const handleTestCurrentVoice = () => {
     // Create a temporary voice object with current form data
     const testVoiceData: Voice = {
+      ...formData,
       id: voice.id,
-      name: formData.name,
-      description: formData.description,
-      parameters: formData.parameters
     };
     testVoice(testVoiceData);
   };
@@ -110,14 +103,14 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Speed */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Speed: {formData.parameters.speed}
+                Speed: {formData.speed}
               </label>
               <input
                 type="range"
                 min="0.1"
                 max="3.0"
                 step="0.1"
-                value={formData.parameters.speed}
+                value={formData.speed}
                 onChange={(e) => handleParameterChange('speed', parseFloat(e.target.value))}
                 className="w-full"
               />
@@ -130,14 +123,14 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Pitch */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Pitch: {formData.parameters.pitch}
+                Pitch: {formData.pitch}
               </label>
               <input
                 type="range"
                 min="0.1"
                 max="3.0"
                 step="0.1"
-                value={formData.parameters.pitch}
+                value={formData.pitch}
                 onChange={(e) => handleParameterChange('pitch', parseFloat(e.target.value))}
                 className="w-full"
               />
@@ -150,14 +143,14 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Temperature */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Temperature: {formData.parameters.temperature}
+                Temperature: {formData.temperature}
               </label>
               <input
                 type="range"
                 min="0.1"
                 max="1.0"
                 step="0.1"
-                value={formData.parameters.temperature}
+                value={formData.temperature}
                 onChange={(e) => handleParameterChange('temperature', parseFloat(e.target.value))}
                 className="w-full"
               />
@@ -170,14 +163,14 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Top P */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Top P: {formData.parameters.top_p}
+                Top P: {formData.top_p}
               </label>
               <input
                 type="range"
                 min="0.1"
                 max="1.0"
                 step="0.1"
-                value={formData.parameters.top_p}
+                value={formData.top_p}
                 onChange={(e) => handleParameterChange('top_p', parseFloat(e.target.value))}
                 className="w-full"
               />
@@ -190,14 +183,14 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Top K */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Top K: {formData.parameters.top_k}
+                Top K: {formData.top_k}
               </label>
               <input
                 type="range"
                 min="1"
                 max="100"
                 step="1"
-                value={formData.parameters.top_k}
+                value={formData.top_k}
                 onChange={(e) => handleParameterChange('top_k', parseInt(e.target.value))}
                 className="w-full"
               />
@@ -210,7 +203,7 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Seed */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Seed: {formData.parameters.seed}
+                Seed: {formData.seed}
                 <span className="text-xs text-gray-500 ml-2">(for consistent voice)</span>
               </label>
               <div className="flex gap-2">
@@ -218,7 +211,7 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
                   type="number"
                   min="0"
                   max="2147483647"
-                  value={formData.parameters.seed}
+                  value={formData.seed}
                   onChange={(e) => handleParameterChange('seed', parseInt(e.target.value) || 2024)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -239,14 +232,14 @@ export const VoiceEditor: React.FC<VoiceEditorProps> = ({
             {/* Batch Size */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Batch Size: {formData.parameters.batch_size}
+                Batch Size: {formData.batch_size}
               </label>
               <input
                 type="range"
                 min="1"
                 max="10"
                 step="1"
-                value={formData.parameters.batch_size}
+                value={formData.batch_size}
                 onChange={(e) => handleParameterChange('batch_size', parseInt(e.target.value))}
                 className="w-full"
               />
