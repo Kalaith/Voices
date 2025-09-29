@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "background_description": "Solar panel installation on modern home rooftop with bright sunlight",
+      "dialogue": "Renewable energy is transforming how we power our homes and communities.",
+      "duration": 6
+    },
+    {
+      "scene_number": 2,
+      "background_description": "Wind turbines generating clean electricity on green hillside with blue sky",
+      "dialogue": "Wind power provides clean, reliable energy without harmful emissions.",
+      "duration": 6
+    },
+    {
+      "scene_number": 3,
+      "background_description": "Hydroelectric dam generating sustainable power with flowing water",
+      "dialogue": "Water power has provided clean energy for generations and continues growing.",
+      "duration": 6
+    }
+  ],
+  "topic": "renewable energy",
+  "total_duration": 20,
+  "generated_text": " With renewable fuels like hydrogen, the future of transportation is green. (Fade out)\n\nRenewable energy is an exciting field that is rapidly evolving to meet our world's changing needs. From solar panels on rooftops to wind farms on hillsides, water power harnessed from dams, and electric vehicles running on green hydrogen fuel - these innovative technologies are helping us reduce our reliance on fossil fuels and combat climate change. By embracing renewable energy solutions today, we can create a more sustainable tomorrow for all"
+}

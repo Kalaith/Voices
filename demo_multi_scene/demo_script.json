@@ -1,0 +1,30 @@
+{
+  "scenes": [
+    {
+      "scene_number": 1,
+      "dialogue": "Climate change requires immediate action, but we have powerful solutions at our fingertips.",
+      "background_desc": "Modern sustainable city with green buildings and solar panels",
+      "duration": 7
+    },
+    {
+      "scene_number": 2,
+      "dialogue": "Renewable energy like wind and solar power can replace fossil fuels completely.",
+      "background_desc": "Wind farm on rolling hills with spinning turbines",
+      "duration": 8
+    },
+    {
+      "scene_number": 3,
+      "dialogue": "Protecting and restoring forests captures carbon while preserving biodiversity.",
+      "background_desc": "Lush green forest with diverse wildlife",
+      "duration": 8
+    },
+    {
+      "scene_number": 4,
+      "dialogue": "Education empowers the next generation to build a sustainable future for everyone.",
+      "background_desc": "Students learning about sustainability in classroom",
+      "duration": 7
+    }
+  ],
+  "topic": "Climate Change Solutions",
+  "total_duration": "30 seconds"
+}
