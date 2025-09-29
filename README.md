@@ -1,8 +1,6 @@
 # Voices - Voice Management Web Application
 
-A web-based voice and audio management system with React frontend and PHP backend for voice content organization and playback.
-
-> **Note**: The AI video generation functionality has been moved to a separate project: [VideoGeneration](H:\VideoGeneration\README.md)
+A voice and audio management system for organizing, storing, and managing voice content and audio files.
 
 ## 🏗️ Architecture
 
@@ -13,8 +11,8 @@ This is a web application consisting of:
 
 ```
 voices/
-├── frontend/           # React frontend (:5173)
-├── backend/           # PHP API server (:8000)
+├── frontend/           # React frontend
+├── backend/           # PHP API server
 └── README.md          # This file
 ```
 
@@ -207,10 +205,3 @@ The VideoGeneration project can be used independently or integrated with this we
 ## 📝 License
 
 This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- **React**: Frontend framework
-- **Slim Framework**: PHP microframework
-- **Tailwind CSS**: Utility-first CSS framework
-- **TypeScript**: Type-safe JavaScript development
