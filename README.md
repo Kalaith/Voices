@@ -1,20 +1,20 @@
-# Voice Generator - Multi-Engine TTS Platform
+# Voices - Voice Management Web Application
 
-A comprehensive text-to-speech (TTS) platform that supports multiple TTS engines including ChatTTS and Chatterbox, with custom voice creation, script management, and voice library features.
+A web-based voice and audio management system with React frontend and PHP backend for voice content organization and playback.
+
+> **Note**: The AI video generation functionality has been moved to a separate project: [VideoGeneration](H:\VideoGeneration\README.md)
 
 ## 🏗️ Architecture
 
-This is a multi-service application consisting of:
+This is a web application consisting of:
 
 - **Frontend**: React/TypeScript application with Vite
 - **Backend**: PHP REST API for data management
-- **Service**: Python FastAPI service for TTS processing
 
 ```
 voices/
-├── voice-generator/     # React frontend (:5173)
-├── backend/            # PHP API server (:8000)
-├── service/           # Python TTS service (:9966)
+├── frontend/           # React frontend (:5173)
+├── backend/           # PHP API server (:8000)
 └── README.md          # This file
 ```
 
@@ -23,7 +23,6 @@ voices/
 ### Prerequisites
 - **Node.js** 18+ (for frontend)
 - **PHP** 8.0+ with extensions: `curl`, `json`, `mbstring`
-- **Python** 3.8+ with pip
 - **Git**
 
 ### Installation & Setup
@@ -34,11 +33,11 @@ voices/
    cd voices
    ```
 
-2. **Start all services** (run each in a separate terminal):
+2. **Start the services** (run each in a separate terminal):
 
    **Frontend (Terminal 1):**
    ```bash
-   cd voice-generator
+   cd frontend
    npm install
    npm run dev
    # Runs on http://localhost:5173
@@ -47,16 +46,9 @@ voices/
    **Backend (Terminal 2):**
    ```bash
    cd backend
-   php -S localhost:8000 -t public
+   composer install
+   composer run start
    # Runs on http://localhost:8000
-   ```
-
-   **Python Service (Terminal 3):**
-   ```bash
-   cd service
-   pip install -r requirements.txt
-   python main.py
-   # Runs on http://localhost:9966
    ```
 
 3. **Open the application**
@@ -64,33 +56,23 @@ voices/
 
 ## 🎯 Features
 
-### 🎤 Multi-Engine TTS Support
-- **ChatTTS**: Conversational text-to-speech with natural voices
-- **Chatterbox**: Zero-shot TTS with emotion control and voice conversion
-- Engine selection with local storage persistence
-
-### 🎨 Voice Creation & Management
-- Create custom voices with adjustable parameters:
-  - Speed, Pitch, Temperature
-  - Top-P, Top-K sampling
-  - Seed for consistent generation
-  - Batch size for performance optimization
-  - Chatterbox-specific: Exaggeration, CFG Weight
+### 🎤 Voice Management
 - Voice library with search and filtering
-- Import/Export voice configurations
+- Voice configuration storage and retrieval
+- Import/Export voice settings
+- Voice parameter organization
 
-### 📝 Script Management
-- Multi-speaker script support
-- Real-time voice testing
-- Batch audio generation
-- Script templates and presets
+### 📝 Audio Content Management
+- Audio file upload and organization
+- Playback controls and preview
+- Metadata management
+- Content categorization
 
-### 🔧 Advanced Features
-- Voice parameter fine-tuning
-- Audio preview and testing
-- Background processing with progress tracking
-- Error handling and retry mechanisms
-- Responsive UI with dark/light theme support
+### 🔧 Web Interface
+- Responsive design for desktop and mobile
+- Dark/light theme support
+- Real-time updates and progress tracking
+- User-friendly audio management interface
 
 ## 🛠️ Technical Details
 
@@ -102,60 +84,44 @@ voices/
 - **Features**: Hot reload, TypeScript checking, responsive design
 
 **Key Components:**
-- `TTSEngineSelector`: Engine switching with persistence
-- `VoiceCreator/VoiceEditor`: Voice parameter management
-- `ScriptEditor`: Multi-speaker script editing
 - `VoiceLibrary`: Voice management interface
+- `AudioPlayer`: Audio playback controls
+- `FileUpload`: File management system
+- `Dashboard`: Main application interface
 
 ### Backend (PHP)
-- **Framework**: Pure PHP with routing
+- **Framework**: Slim Framework with PSR standards
 - **Database**: File-based storage (JSON)
-- **API**: RESTful endpoints
+- **API**: RESTful endpoints with proper HTTP methods
 - **Features**: CORS support, error handling, file uploads
 
 **Key Services:**
-- `AudioGenerationService`: Handles TTS requests with timeout management
 - Voice CRUD operations
-- Script management
-- File upload handling
-
-### Service (Python/FastAPI)
-- **Framework**: FastAPI with async support
-- **TTS Engines**: ChatTTS, Chatterbox integration
-- **Audio Processing**: soundfile, numpy
-- **Features**: Background tasks, health monitoring, parameter validation
-
-**Key Features:**
-- Engine abstraction layer
-- Parameter conversion and validation
-- Audio post-processing (speed adjustment, normalization)
-- Comprehensive error handling and logging
+- Audio file management
+- User session handling
+- File upload processing
 
 ## 📁 Project Structure
 
 ```
 voices/
-├── voice-generator/          # Frontend React App
+├── frontend/                # Frontend React App
 │   ├── src/
-│   │   ├── components/       # UI components
-│   │   ├── hooks/           # Custom React hooks
-│   │   ├── pages/           # Page components
-│   │   ├── types/           # TypeScript definitions
-│   │   └── utils/           # Utility functions
-│   ├── public/              # Static assets
+│   │   ├── components/      # UI components
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── pages/          # Page components
+│   │   ├── types/          # TypeScript definitions
+│   │   └── utils/          # Utility functions
+│   ├── public/             # Static assets
 │   └── package.json
-├── backend/                 # PHP Backend
-│   ├── public/              # Web root
-│   ├── src/                 # PHP source code
-│   │   ├── controllers/     # API controllers
-│   │   ├── services/        # Business logic
-│   │   └── models/          # Data models
-│   └── data/                # JSON data storage
-├── service/                 # Python TTS Service
-│   ├── src/                 # TTS engine implementations
-│   ├── models/              # Pydantic models
-│   ├── config/              # Configuration
-│   └── main.py              # FastAPI app
+├── backend/                # PHP Backend
+│   ├── public/             # Web root
+│   ├── src/                # PHP source code
+│   │   ├── Controllers/    # API controllers
+│   │   ├── Services/       # Business logic
+│   │   ├── Models/         # Data models
+│   │   └── Actions/        # Action handlers
+│   └── data/               # JSON data storage
 └── README.md
 ```
 
@@ -166,7 +132,6 @@ voices/
 **Frontend (.env)**
 ```env
 VITE_API_BASE_URL=http://localhost:8000
-VITE_SERVICE_BASE_URL=http://localhost:9966
 ```
 
 **Backend (.env)**
@@ -175,27 +140,22 @@ CORS_ORIGIN=http://localhost:5173
 UPLOAD_DIR=uploads
 ```
 
-**Service (.env)**
-```env
-HOST=localhost
-PORT=9966
-CORS_ORIGINS=["http://localhost:5173"]
-```
+## 🔄 Development Workflow
 
-## 🎵 Voice Parameters
+1. **Start both services** in development mode
+2. **Frontend development**: Hot reload at `:5173`
+3. **Backend changes**: Restart PHP server if needed
+4. **Testing**: Use built-in interface features
 
-### Universal Parameters
-- **Speed**: 0.1-3.0 (playback speed)
-- **Pitch**: 0.1-3.0 (voice pitch)
-- **Temperature**: 0.1-1.0 (creativity/randomness)
-- **Top-P**: 0.1-1.0 (nucleus sampling)
-- **Top-K**: 1-100 (top-k sampling)
-- **Seed**: Integer for reproducible results
-- **Batch Size**: 1-10 (generation performance vs memory)
+## 📊 API Endpoints
 
-### Chatterbox-Specific
-- **Exaggeration**: 0.0-1.0 (emotion control)
-- **CFG Weight**: 0.0-1.0 (classifier-free guidance)
+### Backend (PHP) - Port 8000
+- `GET /api/voices` - List all voices
+- `POST /api/voices` - Create new voice
+- `PUT /api/voices/{id}` - Update voice
+- `DELETE /api/voices/{id}` - Delete voice
+- `POST /api/upload` - Upload audio files
+- `GET /api/files` - List uploaded files
 
 ## 🚨 Troubleshooting
 
@@ -208,16 +168,6 @@ netstat -ano | findstr :5173
 taskkill /F /PID <process_id>
 ```
 
-**TTS Engine Not Loading**
-- Check Python dependencies: `pip install -r requirements.txt`
-- Verify CUDA availability for GPU acceleration
-- Check service logs for specific error messages
-
-**Audio Generation Timeout**
-- Increase PHP timeout settings in backend
-- Check network connectivity between services
-- Monitor service logs for processing status
-
 **Frontend Build Errors**
 ```bash
 # Clear node modules and reinstall
@@ -225,40 +175,26 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Performance Optimization
+**PHP Backend Issues**
+```bash
+# Check PHP version
+php --version
 
-**For Faster Audio Generation:**
-- Increase batch_size parameter (uses more memory)
-- Use GPU acceleration when available
-- Consider engine-specific optimizations
+# Install dependencies
+cd backend && composer install
+```
 
-**For Lower Memory Usage:**
-- Decrease batch_size to 1
-- Use CPU-only mode
-- Close unused browser tabs
+## 🔗 Related Projects
 
-## 🔄 Development Workflow
+### VideoGeneration Project
+For AI-powered video creation capabilities, see the separate [VideoGeneration](H:\VideoGeneration\README.md) project which includes:
 
-1. **Start all services** in development mode
-2. **Frontend development**: Hot reload at `:5173`
-3. **Backend changes**: Restart PHP server
-4. **Service changes**: Restart Python service
-5. **Testing**: Use built-in voice testing features
+- **AI Script Generation** (KoboldAI)
+- **Background Generation** (ComfyUI)
+- **Voice Synthesis** (TTS Service)
+- **Video Assembly** (FFmpeg)
 
-## 📊 API Endpoints
-
-### Backend (PHP) - Port 8000
-- `GET /api/voices` - List all voices
-- `POST /api/voices` - Create new voice
-- `PUT /api/voices/{id}` - Update voice
-- `DELETE /api/voices/{id}` - Delete voice
-- `POST /api/generate` - Generate audio
-
-### Service (Python) - Port 9966
-- `GET /engines` - List available TTS engines
-- `POST /engines/select` - Select TTS engine
-- `POST /generate` - Generate TTS audio
-- `GET /health` - Service health check
+The VideoGeneration project can be used independently or integrated with this web application for complete video production workflows.
 
 ## 🤝 Contributing
 
@@ -274,8 +210,7 @@ This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgments
 
-- **ChatTTS**: Advanced conversational TTS
-- **Chatterbox**: Zero-shot voice conversion
 - **React**: Frontend framework
-- **FastAPI**: Python web framework
+- **Slim Framework**: PHP microframework
 - **Tailwind CSS**: Utility-first CSS framework
+- **TypeScript**: Type-safe JavaScript development
