@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { CharacterManager } from '../components/CharacterManager';
 import { VideoProjectCreator } from '../components/VideoProjectCreator';
-import { VideoScriptEditor } from '../components/VideoScriptEditor';
-import { VideoProject, Character } from '../types';
+import { VideoProjectEditor } from '../components/video/VideoProjectEditor';
+import { VideoProject } from '../types/video';
+import { Character } from '../types/character';
 
 export const VideoManagerPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'projects' | 'characters' | 'editor'>('projects');
@@ -21,6 +22,11 @@ export const VideoManagerPage: React.FC = () => {
 
   const handleCharacterSelect = (character: Character) => {
     setSelectedCharacter(character);
+  };
+
+  const handleCloseEditor = () => {
+    setSelectedProject(null);
+    setActiveTab('projects');
   };
 
   const tabConfig = [
@@ -125,11 +131,9 @@ export const VideoManagerPage: React.FC = () => {
             )}
             
             {activeTab === 'editor' && selectedProject && (
-              <VideoScriptEditor 
-                scriptId={selectedProject.script_id}
-                onScriptChange={(lines) => {
-                  console.log('Script lines updated:', lines.length);
-                }}
+              <VideoProjectEditor
+                projectId={selectedProject.id}
+                onClose={handleCloseEditor}
               />
             )}
 

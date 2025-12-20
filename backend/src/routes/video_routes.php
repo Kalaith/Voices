@@ -28,6 +28,7 @@ $router->post('/api/video/projects', [$videoProjectController, 'createProject'])
 $router->get('/api/video/projects', [$videoProjectController, 'getProjects']);
 $router->get('/api/video/projects/{id}', [$videoProjectController, 'getProject']);
 $router->get('/api/video/projects/{id}/details', [$videoProjectController, 'getProjectWithScript']);
+$router->get('/api/video/projects/{id}/export', [$videoProjectController, 'exportJSON']);
 $router->put('/api/video/projects/{id}', [$videoProjectController, 'updateProject']);
 $router->delete('/api/video/projects/{id}', [$videoProjectController, 'deleteProject']);
 $router->get('/api/video/projects/{id}/stats', [$videoProjectController, 'getProjectStats']);

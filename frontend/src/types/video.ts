@@ -8,6 +8,13 @@ export interface VideoProject {
   script_description?: string;
   resolution: VideoResolution;
   background_style: BackgroundStyle;
+  fps?: number;
+  scene_duration?: number;
+  total_duration?: number;
+  visual_novel_mode?: boolean;
+  character_display?: boolean;
+  image_config?: ImageConfigData;
+  script_generation_config?: ScriptGenerationConfigData;
   status: VideoStatus;
   progress: number;
   output_path?: string;
@@ -19,6 +26,26 @@ export interface VideoProject {
   script_lines?: VideoScriptLine[];
   scenes?: Scene[];
   characters?: CharacterUsage[];
+}
+
+export interface ImageConfigData {
+  generation_mode?: 'generate' | 'predefined';
+  style?: string;
+  character_style?: string;
+  background_style?: string;
+  width?: number;
+  height?: number;
+  steps?: number;
+  files?: string[];
+}
+
+export interface ScriptGenerationConfigData {
+  generation_mode?: 'predefined' | 'ai_generated';
+  prompt?: string;
+  max_length?: number;
+  temperature?: number;
+  top_p?: number;
+  kobold_endpoint?: string;
 }
 
 export interface CreateVideoProjectRequest {

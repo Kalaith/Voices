@@ -1,0 +1,262 @@
+{
+  "project": {
+    "title": "Dungeon Explorers: Slime Caverns - Part 2",
+    "description": "The adventurers descend into the slime-infested caverns, battling strange gelatinous creatures and uncovering the secrets of this oozing dungeon."
+  },
+  "output_directory": "dungeon_explorers_slime_caverns_part2",
+  "characters": {
+    "aria": {
+      "name": "Aria",
+      "role": "Warrior",
+      "description": "A brave knight with unwavering determination and protective instincts",
+      "voice": {
+        "engine": "chatterbox",
+        "voice_id": "female_confident",
+        "speed": 1.0,
+        "exaggeration": 0.9,
+        "cfg_weight": 0.8
+      },
+      "appearance": "Fantasy anime RPG portrait, silver armor, red hair, determined expression, consistent style",
+      "portrait": {
+        "position": "right",
+        "size": "medium",
+        "file": "aria_portrait.png"
+      }
+    },
+    "kael": {
+      "name": "Kael",
+      "role": "Mage",
+      "description": "A wise spellcaster with deep knowledge of ancient magic and dungeon lore",
+      "voice": {
+        "engine": "chatterbox",
+        "voice_id": "male_scholarly",
+        "speed": 0.9,
+        "exaggeration": 0.6,
+        "cfg_weight": 0.7
+      },
+      "appearance": "Fantasy anime RPG portrait, blue robes, staff, long beard, consistent style",
+      "portrait": {
+        "position": "left",
+        "size": "medium",
+        "file": "kael_portrait.png"
+      }
+    },
+    "zara": {
+      "name": "Zara",
+      "role": "Rogue",
+      "description": "A nimble thief with quick wit and expertise in traps and stealth",
+      "voice": {
+        "engine": "chatterbox",
+        "voice_id": "female_playful",
+        "speed": 1.2,
+        "exaggeration": 1.0,
+        "cfg_weight": 0.9
+      },
+      "appearance": "Fantasy anime RPG portrait, dark leather armor, twin daggers, mischievous smile, consistent style",
+      "portrait": {
+        "position": "left",
+        "size": "medium",
+        "file": "zara_portrait.png"
+      }
+    },
+    "narrator": {
+      "name": "Narrator",
+      "role": "Storyteller",
+      "description": "The omniscient voice guiding the story and describing the world",
+      "voice": {
+        "engine": "chatterbox",
+        "voice_id": "neutral_deep",
+        "speed": 0.95,
+        "exaggeration": 0.7,
+        "cfg_weight": 0.8
+      },
+      "appearance": "N/A",
+      "portrait": {
+        "position": "none",
+        "size": "none"
+      }
+    }
+  },
+  "video": {
+    "scene_duration": 60,
+    "fps": 30,
+    "total_duration": 600,
+    "visual_novel_mode": true,
+    "character_display": true
+  },
+  "script": {
+    "generation_mode": "predefined",
+    "prompt": "Generate engaging dialogue for a fantasy dungeon exploration adventure featuring slime monsters, strange dungeon environments, and teamwork.",
+    "max_length": 300,
+    "temperature": 0.8,
+    "top_p": 0.9,
+    "scenes": [
+      {
+        "scene_number": 1,
+        "background_description": "Slime Dungeon - Entrance chamber with dripping walls and glowing green slime pools",
+        "characters_present": ["narrator", "aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "narrator", "text": "From stone to slime, the cavern opens with a sickly glow, walls dripping with oozing residue." },
+          { "character": "aria", "text": "Stay sharp. These creatures won't fight like goblins." },
+          { "character": "kael", "text": "The air itself carries alchemical residue. Fascinating... and dangerous." },
+          { "character": "zara", "text": "And here I thought nothing could smell worse than goblins." }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 2,
+        "background_description": "Slime Dungeon - Narrow corridor with bioluminescent slime dripping from the ceiling",
+        "characters_present": ["zara", "aria", "kael"],
+        "dialogue": [
+          { "character": "zara", "text": "Hold it--something's oozing above us. That slime's ready to drop." },
+          { "character": "aria", "text": "Shields up. Don't let it touch you." },
+          { "character": "kael", "text": "They're drawn to heat. Our very presence is a lure." }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 3,
+        "background_description": "Slime Dungeon - Chamber with sticky floors and small slimes oozing toward the party",
+        "characters_present": ["narrator", "aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "narrator", "text": "The floor clings to their boots as slimes slither closer, quivering with hunger." },
+          { "character": "aria", "text": "Weapons ready. Hold formation." },
+          { "character": "zara", "text": "Wonderful. We're risking our lives against living dessert." },
+          { "character": "kael", "text": "Their touch corrodes even steel. Do not falter." }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 4,
+        "background_description": "Slime Dungeon - Battle chamber with glowing slime splattering as the party attacks",
+        "characters_present": ["aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "aria", "text": "Strike hard. Don't let them reform!" },
+          { "character": "kael", "text": "Fire is the key--stand clear!" },
+          { "character": "zara", "text": "I'll carve up the little ones before they bulk up." }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 5,
+        "background_description": "Slime Dungeon - After battle, puddles of defeated slimes steaming on the stone floor",
+        "characters_present": ["aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "aria", "text": "That was harder than expected." },
+          { "character": "kael", "text": "Each fragment yearns to return to the whole. Persistence is their strength." },
+          { "character": "zara", "text": "And the best part? I found some extra treasure along the way!" }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 6,
+        "background_description": "Slime Dungeon - Large cavern with bubbling slime pools reflecting eerie light",
+        "characters_present": ["narrator", "kael", "aria", "zara"],
+        "dialogue": [
+          { "character": "narrator", "text": "Pools of bubbling slime churn like cauldrons, casting green light on the cavern walls." },
+          { "character": "kael", "text": "This energy rivals the rituals of goblin shamans. Dangerous indeed." },
+          { "character": "aria", "text": "If there's a source, we end it." },
+          { "character": "zara", "text": "Or loot it first, smash it later." }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 7,
+        "background_description": "Slime Dungeon - Twisting passage with slime-coated stalagmites glowing faintly",
+        "characters_present": ["aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "aria", "text": "Careful. The ground's treacherous here." },
+          { "character": "kael", "text": "The residue pulses faintly. Almost alive." },
+          { "character": "zara", "text": "Lovely. Breathing walls, sticky floors, and a ceiling with teeth. What a dungeon." }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 8,
+        "background_description": "Slime Dungeon - Chamber with semi-transparent giant slime looming in the center",
+        "characters_present": ["narrator", "aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "narrator", "text": "From the depths, a colossal slime rises, its body shimmering with absorbed weapons and bones." },
+          { "character": "aria", "text": "Brace yourselves. This one's different." },
+          { "character": "kael", "text": "The core glows. Strike there if you can!" },
+          { "character": "zara", "text": "Finally, something worth unsheathing my blades for!" }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 9,
+        "background_description": "Slime Dungeon - Battle chaos, splashes of glowing slime raining as the giant slime attacks",
+        "characters_present": ["aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "aria", "text": "Keep pressure on it! Don't get caught in its mass!" },
+          { "character": "kael", "text": "Containment spells won't hold long--finish it!" },
+          { "character": "zara", "text": "I see the core--cover me, I'm diving in!" }
+        ],
+        "duration": 60
+      },
+      {
+        "scene_number": 10,
+        "background_description": "Slime Dungeon - Quiet aftermath chamber, glowing slime fragments slowly fading away",
+        "characters_present": ["narrator", "aria", "kael", "zara"],
+        "dialogue": [
+          { "character": "narrator", "text": "At last, silence. The giant slime collapses into fading light." },
+          { "character": "aria", "text": "One threat ended. But this dungeon still holds more." },
+          { "character": "kael", "text": "Indeed. We've only scratched the surface of its secrets." },
+          { "character": "zara", "text": "Good. I wasn't finished having fun down here anyway." }
+        ],
+        "duration": 60
+      }
+    ]
+  },
+  "audio": {
+    "enabled": true,
+    "engine": "chatterbox",
+    "multi_voice_enabled": true,
+    "default_engine": "chatterbox",
+    "character_voice_mapping": {
+      "aria": {
+        "engine": "chatterbox",
+        "voice_id": "female_confident",
+        "speed": 1.0,
+        "exaggeration": 0.9,
+        "cfg_weight": 0.8
+      },
+      "kael": {
+        "engine": "chatterbox",
+        "voice_id": "male_scholarly",
+        "speed": 0.9,
+        "exaggeration": 0.6,
+        "cfg_weight": 0.7
+      },
+      "zara": {
+        "engine": "chatterbox",
+        "voice_id": "female_playful",
+        "speed": 1.2,
+        "exaggeration": 1.0,
+        "cfg_weight": 0.9
+      },
+      "narrator": {
+        "engine": "chatterbox",
+        "voice_id": "neutral_deep",
+        "speed": 0.95,
+        "exaggeration": 0.7,
+        "cfg_weight": 0.8
+      }
+    },
+    "fallback_voice_parameters": {
+      "speed": 1.0,
+      "exaggeration": 0.8,
+      "cfg_weight": 0.8
+    }
+  },
+  "images": {
+    "generation_mode": "generate",
+    "style": "fantasy anime style, consistent RPG art, dark atmospheric slime dungeon, glowing slime, dramatic lighting",
+    "character_style": "consistent fantasy RPG anime portraits, expressive but uniform art style across characters",
+    "background_style": "slime dungeon environments, glowing green slime pools, stone caverns, atmospheric shadows, consistent tone",
+    "width": 1920,
+    "height": 1080,
+    "steps": 20,
+    "files": []
+  }
+}

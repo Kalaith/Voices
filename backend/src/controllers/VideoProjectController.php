@@ -398,23 +398,247 @@ class VideoProjectController {
         }
     }
     
+    public function exportJSON($id) {
+        header('Content-Type: application/json');
+
+        try {
+            // Get project with all related data
+            $project = $this->getProjectById($id);
+
+            if (!$project) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Video project not found']);
+                return;
+            }
+
+            // Get script lines with character and voice info
+            $stmt = $this->db->prepare("
+                SELECT
+                    sl.*,
+                    cp.name as character_display_name,
+                    cp.description as character_description,
+                    cp.base_portrait_url,
+                    cp.voice_profile_id,
+                    v.name as voice_name,
+                    v.parameters as voice_parameters
+                FROM script_lines sl
+                LEFT JOIN character_profiles cp ON sl.character_name = cp.name
+                LEFT JOIN voices v ON cp.voice_profile_id = v.id
+                WHERE sl.script_id = ?
+                ORDER BY sl.line_order
+            ");
+            $stmt->execute([$project['script_id']]);
+            $scriptLines = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Get unique scenes
+            $sceneStmt = $this->db->prepare("
+                SELECT DISTINCT
+                    scene_id,
+                    background_prompt,
+                    COUNT(*) as line_count
+                FROM script_lines
+                WHERE script_id = ? AND scene_id IS NOT NULL
+                GROUP BY scene_id, background_prompt
+                ORDER BY MIN(line_order)
+            ");
+            $sceneStmt->execute([$project['script_id']]);
+            $scenes = $sceneStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Get unique characters with voice mappings
+            $charStmt = $this->db->prepare("
+                SELECT DISTINCT
+                    sl.character_name,
+                    cp.name as character_display_name,
+                    cp.description,
+                    cp.base_portrait_url,
+                    cp.voice_profile_id,
+                    v.name as voice_name,
+                    v.parameters as voice_parameters,
+                    COUNT(sl.id) as line_count,
+                    COUNT(DISTINCT sl.scene_id) as scene_count
+                FROM script_lines sl
+                LEFT JOIN character_profiles cp ON sl.character_name = cp.name
+                LEFT JOIN voices v ON cp.voice_profile_id = v.id
+                WHERE sl.script_id = ? AND sl.character_name IS NOT NULL
+                GROUP BY sl.character_name
+                ORDER BY line_count DESC
+            ");
+            $charStmt->execute([$project['script_id']]);
+            $characters = $charStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Build the video service JSON format
+            $videoServiceJSON = $this->buildVideoServiceJSON($project, $scriptLines, $scenes, $characters);
+
+            echo json_encode($videoServiceJSON, JSON_PRETTY_PRINT);
+
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Server error: ' . $e->getMessage()]);
+        }
+    }
+
+    private function buildVideoServiceJSON($project, $scriptLines, $scenes, $characters) {
+        // Generate output directory
+        $outputDirectory = 'GeneratedVideos/' . $this->sanitizeFilename($project['name']);
+
+        // Build characters object
+        $charactersObj = [];
+        foreach ($characters as $char) {
+            $name = $char['character_name'] ?? $char['character_display_name'] ?? 'Unknown';
+
+            // Parse voice parameters
+            $voiceParams = [];
+            if (!empty($char['voice_parameters'])) {
+                $voiceParams = json_decode($char['voice_parameters'], true) ?? [];
+            }
+
+            $charactersObj[$name] = [
+                'name' => $char['character_display_name'] ?? $name,
+                'role' => '',
+                'description' => $char['description'] ?? '',
+                'voice' => [
+                    'engine' => 'chatterbox',
+                    'voice_id' => $char['voice_name'] ?? 'default',
+                    'speed' => $voiceParams['speed'] ?? 1.0,
+                    'exaggeration' => $voiceParams['exaggeration'] ?? 0.5,
+                    'cfg_weight' => $voiceParams['cfg_weight'] ?? 0.7
+                ],
+                'appearance' => '',
+                'portrait' => [
+                    'position' => 'left',
+                    'size' => 'medium',
+                    'file' => $char['base_portrait_url'] ?? ''
+                ]
+            ];
+        }
+
+        // Build scenes array
+        $scenesArray = [];
+        $sceneNumber = 1;
+
+        // Group lines by scene_id
+        $sceneGroups = [];
+        foreach ($scriptLines as $line) {
+            $sceneId = $line['scene_id'] ?? 'default';
+            if (!isset($sceneGroups[$sceneId])) {
+                $sceneGroups[$sceneId] = [];
+            }
+            $sceneGroups[$sceneId][] = $line;
+        }
+
+        foreach ($sceneGroups as $sceneId => $lines) {
+            // Find scene info
+            $sceneInfo = null;
+            foreach ($scenes as $s) {
+                if ($s['scene_id'] === $sceneId) {
+                    $sceneInfo = $s;
+                    break;
+                }
+            }
+
+            // Build dialogue
+            $dialogue = [];
+            foreach ($lines as $line) {
+                $dialogue[] = [
+                    'character' => $line['character_name'] ?? 'Narrator',
+                    'text' => $line['content']
+                ];
+            }
+
+            // Get characters present in scene
+            $charactersPresent = [];
+            foreach ($lines as $line) {
+                if (!empty($line['character_name']) && !in_array($line['character_name'], $charactersPresent)) {
+                    $charactersPresent[] = $line['character_name'];
+                }
+            }
+
+            $scenesArray[] = [
+                'scene_number' => $sceneNumber++,
+                'background_description' => $sceneInfo['background_prompt'] ?? ($lines[0]['background_prompt'] ?? ''),
+                'characters_present' => $charactersPresent,
+                'dialogue' => $dialogue,
+                'duration' => count($dialogue) * 2.5
+            ];
+        }
+
+        // Get resolution dimensions
+        $dimensions = $this->getResolutionDimensions($project['resolution']);
+
+        return [
+            'project' => [
+                'title' => $project['name'],
+                'description' => $project['script_description'] ?? ''
+            ],
+            'output_directory' => $outputDirectory,
+            'characters' => $charactersObj,
+            'video' => [
+                'scene_duration' => 5.0,
+                'fps' => 30,
+                'total_duration' => count($scenesArray) * 5.0,
+                'visual_novel_mode' => true,
+                'character_display' => true
+            ],
+            'script' => [
+                'generation_mode' => 'predefined',
+                'scenes' => $scenesArray
+            ],
+            'audio' => [
+                'enabled' => true,
+                'engine' => 'chatterbox',
+                'multi_voice_enabled' => true,
+                'default_engine' => 'chatterbox',
+                'character_voice_mapping' => $charactersObj,
+                'fallback_voice_parameters' => [
+                    'speed' => 1.0,
+                    'exaggeration' => 0.5,
+                    'cfg_weight' => 0.7
+                ]
+            ],
+            'images' => [
+                'generation_mode' => 'generate',
+                'style' => $project['background_style'] ?? 'anime',
+                'character_style' => $project['background_style'] ?? 'anime',
+                'background_style' => $project['background_style'] ?? 'anime',
+                'width' => $dimensions['width'],
+                'height' => $dimensions['height'],
+                'steps' => 30,
+                'files' => []
+            ]
+        ];
+    }
+
+    private function getResolutionDimensions($resolution) {
+        $resolutions = [
+            '720p' => ['width' => 1280, 'height' => 720],
+            '1080p' => ['width' => 1920, 'height' => 1080],
+            '1440p' => ['width' => 2560, 'height' => 1440],
+            '2160p' => ['width' => 3840, 'height' => 2160]
+        ];
+        return $resolutions[$resolution] ?? $resolutions['1080p'];
+    }
+
+    private function sanitizeFilename($name) {
+        return strtolower(preg_replace('/[^a-z0-9]+/', '_', strtolower($name)));
+    }
+
     private function getProjectById($id) {
         $stmt = $this->db->prepare("
-            SELECT 
+            SELECT
                 vp.*,
                 s.title as script_title,
                 s.description as script_description
-            FROM video_projects vp 
+            FROM video_projects vp
             LEFT JOIN scripts s ON vp.script_id = s.id
             WHERE vp.id = ?
         ");
         $stmt->execute([$id]);
         $project = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($project) {
             $project['progress'] = (int)$project['progress'];
         }
-        
+
         return $project;
     }
 }
