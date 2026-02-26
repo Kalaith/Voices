@@ -34,7 +34,7 @@ export const ImageConfigurationPanel: React.FC<ImageConfigurationPanelProps> = (
     ...config
   });
 
-  const handleChange = (field: keyof ImageConfig, value: any) => {
+  const handleChange = <K extends keyof ImageConfig>(field: K, value: ImageConfig[K]) => {
     const updated = { ...localConfig, [field]: value };
     setLocalConfig(updated);
     onUpdate(updated);

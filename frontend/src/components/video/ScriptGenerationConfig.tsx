@@ -31,7 +31,7 @@ export const ScriptGenerationConfig: React.FC<ScriptGenerationConfigProps> = ({
     ...config
   });
 
-  const handleChange = (field: keyof ScriptGenerationConfigData, value: any) => {
+  const handleChange = <K extends keyof ScriptGenerationConfigData>(field: K, value: ScriptGenerationConfigData[K]) => {
     const updated = { ...localConfig, [field]: value };
     setLocalConfig(updated);
     onUpdate(updated);

@@ -11,7 +11,6 @@ type TabType = 'voices' | 'scripts' | 'generator' | 'testing' | 'video';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('voices');
-  const [currentEngine, setCurrentEngine] = useState<string | null>(null);
 
   const tabs = [
     { id: 'voices' as TabType, label: 'Voice Library', icon: '🎤' },
@@ -31,10 +30,7 @@ function App() {
               <p className="text-gray-600">Create custom voices, manage scripts, and generate audio</p>
             </div>
             <div className="flex-shrink-0 w-full max-w-xs">
-              <TTSEngineSelector 
-                onEngineChange={setCurrentEngine}
-                className="w-full"
-              />
+              <TTSEngineSelector className="w-full" />
             </div>
           </div>
         </header>

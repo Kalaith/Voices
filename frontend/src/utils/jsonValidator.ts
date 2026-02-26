@@ -85,7 +85,7 @@ export class JsonValidator {
   private static validateOutputDirectory(
     json: VideoServiceProject,
     errors: ValidationError[],
-    warnings: ValidationError[]
+    _warnings: ValidationError[]
   ): void {
     if (!json.output_directory || json.output_directory.trim() === '') {
       errors.push({

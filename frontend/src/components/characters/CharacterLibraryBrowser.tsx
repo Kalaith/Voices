@@ -12,8 +12,8 @@ interface CharacterLibraryBrowserProps {
 
 export const CharacterLibraryBrowser: React.FC<CharacterLibraryBrowserProps> = ({
   onSelect,
-  selectedIds = [],
-  multiSelect = false
+  selectedIds: _selectedIds = [],
+  multiSelect: _multiSelect = false
 }) => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);

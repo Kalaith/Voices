@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AudioGeneration } from '../types/audio';
+import { Script } from '../types/script';
 import { ScriptEditor } from '../components/ScriptEditor';
 import { ScriptList } from '../components/ScriptList';
 import { ConnectionStatus } from '../components/ConnectionStatus';
@@ -28,11 +29,11 @@ export function VoiceGeneratorPage() {
     }
   };
 
-  const handleScriptUpdate = (updatedScript: any) => {
+  const handleScriptUpdate = (updatedScript: Script) => {
     updateScript(updatedScript.id, updatedScript);
   };
 
-  const handleGenerateAudio = async (script: any) => {
+  const handleGenerateAudio = async (script: Script) => {
     if (!isConnected) {
       alert('Voice generation service is not connected. Please ensure the service is running on port 9966.');
       return;
@@ -57,7 +58,7 @@ export function VoiceGeneratorPage() {
     }
   };
 
-  const handleScriptSelect = (script: any) => {
+  const handleScriptSelect = (script: Script) => {
     setCurrentScript(script);
     setAudioGeneration(null);
   };
@@ -102,4 +103,3 @@ export function VoiceGeneratorPage() {
     </div>
   );
 }
-

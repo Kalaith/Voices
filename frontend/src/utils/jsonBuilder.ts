@@ -1,5 +1,4 @@
 import { VideoProject, VideoScriptLine, Scene as VideoScene } from '../types/video';
-import { Character } from '../types/character';
 import { Voice } from '../types/voice';
 import {
   VideoServiceProject,
@@ -94,7 +93,7 @@ export class JsonBuilder {
    */
   private static buildVoiceConfig(
     character: ProjectWithFullData['characters'][number],
-    project: ProjectWithFullData
+    _project: ProjectWithFullData
   ): VoiceConfig {
     // Default voice config
     const defaultConfig: VoiceConfig = {

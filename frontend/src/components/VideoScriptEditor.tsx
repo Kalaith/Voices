@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   VideoScriptLine, 
   Character, 
-  Scene, 
   ScriptWithVideoData, 
   UpdateScriptLineRequest,
   ScriptReadiness,
+  CharacterEmotion,
+  CharacterPosition,
   CHARACTER_EMOTIONS,
   CHARACTER_POSITIONS,
   getEmotionDisplayName,
@@ -14,7 +15,6 @@ import {
 } from '../types';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
-import { ProgressBar } from './ui/ProgressBar';
 import { apiService } from '../lib/services/apiService';
 
 interface VideoScriptEditorProps {
@@ -26,7 +26,6 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
   const [scriptData, setScriptData] = useState<ScriptWithVideoData | null>(null);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [readiness, setReadiness] = useState<ScriptReadiness | null>(null);
-  const [selectedLine, setSelectedLine] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedScenes, setExpandedScenes] = useState<Set<string>>(new Set());
@@ -114,7 +113,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
   const autoGenerateSceneData = async () => {
     try {
       setLoading(true);
-      const response = await apiService.post<any>(`/scripts/${scriptId}/auto-generate-scenes`, {});
+      const response = await apiService.post<Record<string, unknown>>(`/scripts/${scriptId}/auto-generate-scenes`, {});
       if (response.error) {
         throw new Error(response.error);
       }
@@ -275,7 +274,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
 
             {expandedScenes.has(sceneId) && (
               <div className="space-y-3">
-                {lines.map((line, index) => (
+                {lines.map((line) => (
                   <div key={line.id} className="border rounded-md p-3">
                     <div className="flex items-start gap-3">
                       <div className="text-sm text-gray-500 w-8 flex-shrink-0">
@@ -312,7 +311,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
                             <select
                               className="w-full p-1 border rounded text-xs focus:ring-1 focus:ring-blue-500"
                               value={line.character_emotion}
-                              onChange={(e) => updateScriptLine(line.id, { character_emotion: e.target.value as any })}
+                              onChange={(e) => updateScriptLine(line.id, { character_emotion: e.target.value as CharacterEmotion })}
                             >
                               {CHARACTER_EMOTIONS.map(emotion => (
                                 <option key={emotion} value={emotion}>
@@ -327,7 +326,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
                             <select
                               className="w-full p-1 border rounded text-xs focus:ring-1 focus:ring-blue-500"
                               value={line.character_position}
-                              onChange={(e) => updateScriptLine(line.id, { character_position: e.target.value as any })}
+                              onChange={(e) => updateScriptLine(line.id, { character_position: e.target.value as CharacterPosition })}
                             >
                               {CHARACTER_POSITIONS.map(pos => (
                                 <option key={pos.value} value={pos.value}>

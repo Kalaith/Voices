@@ -13,7 +13,7 @@ interface EngineInfo {
   available_engines: string[];
   current_engine: string | null;
   engines_info: Record<string, Engine>;
-  engines_health: Record<string, any>;
+  engines_health: Record<string, { available: boolean; loaded: boolean }>;
 }
 
 interface TTSEngineSelectorProps {

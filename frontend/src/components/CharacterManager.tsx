@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Character, CreateCharacterRequest, CharacterExpression, CreateCharacterExpressionRequest, CHARACTER_EMOTIONS, getEmotionDisplayName } from '../types/character';
+import { Character, CreateCharacterRequest, CharacterExpression, CHARACTER_EMOTIONS, getEmotionDisplayName } from '../types/character';
 import { Voice } from '../types/voice';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';

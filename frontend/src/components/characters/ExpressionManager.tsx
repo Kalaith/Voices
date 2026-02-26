@@ -65,12 +65,6 @@ export const ExpressionManager: React.FC<ExpressionManagerProps> = ({
     }
   };
 
-  const handleEditExpression = (expression: CharacterExpression) => {
-    setEditingEmotion(expression.emotion as CharacterEmotion);
-    setExpressionPrompt(expression.expression_prompt || '');
-    setImagePath(expression.image_path || '');
-  };
-
   const getExpression = (emotion: CharacterEmotion) => {
     return expressions.find(exp => exp.emotion === emotion);
   };

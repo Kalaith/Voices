@@ -17,8 +17,8 @@ export interface TTSGenerationResponse {
 export interface EngineInfo {
   available_engines: string[];
   current_engine: string | null;
-  engines_info: Record<string, any>;
-  engines_health: Record<string, any>;
+  engines_info: Record<string, unknown>;
+  engines_health: Record<string, unknown>;
 }
 
 class ChatTTSService {

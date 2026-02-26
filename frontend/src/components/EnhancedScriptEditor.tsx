@@ -311,7 +311,7 @@ export const EnhancedScriptEditor: React.FC<EnhancedScriptEditorProps> = ({
 
         {/* Existing Lines */}
         <div className="space-y-3">
-          {script.lines.map((line, index) => {
+          {script.lines.map((line) => {
             const speaker = getSpeakerById(line.speakerId);
             return (
               <div key={line.id} className="bg-white p-4 rounded-lg border border-gray-200">

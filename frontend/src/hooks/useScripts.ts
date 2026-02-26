@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Script, ScriptLine, Speaker } from '../types/script';
+import { Script } from '../types/script';
 import { apiService } from '../lib/services/apiService';
 
 export const useScripts = () => {

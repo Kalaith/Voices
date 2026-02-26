@@ -1,4 +1,4 @@
-import { Character, CharacterEmotion, CharacterPosition, CharacterUsage } from './character';
+import { CharacterEmotion, CharacterPosition, CharacterUsage } from './character';
 
 export interface VideoProject {
   id: number;

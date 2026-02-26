@@ -7,6 +7,8 @@ import {
   BACKGROUND_STYLES, 
   VIDEO_STATUSES,
   ProjectStats,
+  VideoResolution,
+  BackgroundStyle,
   getReadinessColor,
   getReadinessLabel
 } from '../types/video';
@@ -212,7 +214,7 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
                 <select
                   className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   value={newProject.resolution}
-                  onChange={(e) => setNewProject({ ...newProject, resolution: e.target.value as any })}
+                  onChange={(e) => setNewProject({ ...newProject, resolution: e.target.value as VideoResolution })}
                 >
                   {VIDEO_RESOLUTIONS.map(res => (
                     <option key={res.value} value={res.value}>
@@ -227,7 +229,7 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
                 <select
                   className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   value={newProject.background_style}
-                  onChange={(e) => setNewProject({ ...newProject, background_style: e.target.value as any })}
+                  onChange={(e) => setNewProject({ ...newProject, background_style: e.target.value as BackgroundStyle })}
                 >
                   {BACKGROUND_STYLES.map(style => (
                     <option key={style.value} value={style.value}>

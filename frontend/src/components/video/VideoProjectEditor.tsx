@@ -135,15 +135,15 @@ export const VideoProjectEditor: React.FC<VideoProjectEditorProps> = ({
       {/* Tab Content */}
       <div className="flex-1 overflow-y-auto p-6">
         {activeTab === 'overview' && (
-          <OverviewTab project={project} onRefresh={fetchProject} />
+          <OverviewTab project={project} />
         )}
 
         {activeTab === 'characters' && (
-          <CharactersTab project={project} onRefresh={fetchProject} />
+          <CharactersTab project={project} />
         )}
 
         {activeTab === 'scenes' && (
-          <ScenesTab project={project} onRefresh={fetchProject} />
+          <ScenesTab project={project} />
         )}
 
         {activeTab === 'configuration' && (
@@ -174,7 +174,7 @@ export const VideoProjectEditor: React.FC<VideoProjectEditorProps> = ({
 };
 
 // Overview Tab
-const OverviewTab: React.FC<{ project: ProjectWithFullData; onRefresh: () => void }> = ({ project, onRefresh }) => {
+const OverviewTab: React.FC<{ project: ProjectWithFullData }> = ({ project }) => {
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -229,7 +229,7 @@ const OverviewTab: React.FC<{ project: ProjectWithFullData; onRefresh: () => voi
 };
 
 // Characters Tab
-const CharactersTab: React.FC<{ project: ProjectWithFullData; onRefresh: () => void }> = ({ project }) => {
+const CharactersTab: React.FC<{ project: ProjectWithFullData }> = ({ project }) => {
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -265,7 +265,7 @@ const CharactersTab: React.FC<{ project: ProjectWithFullData; onRefresh: () => v
 };
 
 // Scenes Tab
-const ScenesTab: React.FC<{ project: ProjectWithFullData; onRefresh: () => void }> = ({ project }) => {
+const ScenesTab: React.FC<{ project: ProjectWithFullData }> = ({ project }) => {
   return (
     <div className="space-y-4">
       {project.scenes?.map((scene, idx) => (
@@ -300,7 +300,7 @@ const ConfigurationTab: React.FC<{
       <VideoConfigurationPanel project={project} onUpdate={onUpdate} />
       <ImageConfigurationPanel
         config={{}}
-        onUpdate={(config) => console.log('Image config:', config)}
+        onUpdate={(_config) => {}}
       />
     </div>
   );

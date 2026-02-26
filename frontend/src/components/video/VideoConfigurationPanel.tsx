@@ -11,8 +11,8 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
   project,
   onUpdate
 }) => {
-  const handleChange = (field: keyof VideoProject, value: any) => {
-    onUpdate({ [field]: value });
+  const handleChange = <K extends keyof VideoProject>(field: K, value: VideoProject[K]) => {
+    onUpdate({ [field]: value } as Partial<VideoProject>);
   };
 
   return (
@@ -32,7 +32,7 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
               max="60"
               step="6"
               value={30}
-              onChange={(e) => handleChange('fps' as any, parseInt(e.target.value))}
+              onChange={(e) => handleChange('fps', parseInt(e.target.value))}
               className="flex-1"
             />
             <span className="text-sm font-medium w-12">30</span>
@@ -53,7 +53,7 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
             max="30"
             step="0.5"
             value={5.0}
-            onChange={(e) => handleChange('scene_duration' as any, parseFloat(e.target.value))}
+            onChange={(e) => handleChange('scene_duration', parseFloat(e.target.value))}
             className="w-full p-2 border rounded-md"
           />
           <p className="text-xs text-gray-500 mt-1">
@@ -74,7 +74,7 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
           <input
             type="checkbox"
             checked={true}
-            onChange={(e) => handleChange('visual_novel_mode' as any, e.target.checked)}
+            onChange={(e) => handleChange('visual_novel_mode', e.target.checked)}
             className="w-5 h-5"
           />
         </div>
@@ -92,7 +92,7 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
           <input
             type="checkbox"
             checked={true}
-            onChange={(e) => handleChange('character_display' as any, e.target.checked)}
+            onChange={(e) => handleChange('character_display', e.target.checked)}
             className="w-5 h-5"
           />
         </div>
