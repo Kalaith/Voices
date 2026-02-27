@@ -72,14 +72,14 @@ export const CharacterLibraryBrowser: React.FC<CharacterLibraryBrowserProps> = (
         <h2 className="text-2xl font-bold">Character Library</h2>
         <div className="flex gap-2">
           <Button
-            variant={viewMode === 'grid' ? 'default' : 'outline'}
+            variant={viewMode === 'grid' ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => setViewMode('grid')}
           >
             Grid
           </Button>
           <Button
-            variant={viewMode === 'list' ? 'default' : 'outline'}
+            variant={viewMode === 'list' ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => setViewMode('list')}
           >

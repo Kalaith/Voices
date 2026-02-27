@@ -174,7 +174,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Script Editor: {scriptData.title}</h2>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={autoGenerateSceneData} disabled={loading}>
+          <Button variant="secondary" onClick={autoGenerateSceneData} disabled={loading}>
             {loading ? 'Generating...' : 'Auto-Generate Scenes'}
           </Button>
           <Button onClick={() => fetchScriptData()} disabled={loading}>
@@ -267,7 +267,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
               <h3 className="text-lg font-semibold">
                 Scene: {sceneId.replace(/_/g, ' ')} ({lines.length} lines)
               </h3>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 {expandedScenes.has(sceneId) ? 'Collapse' : 'Expand'}
               </Button>
             </div>
@@ -361,7 +361,7 @@ export const VideoScriptEditor: React.FC<VideoScriptEditorProps> = ({ scriptId, 
                           {line.scene_id && !line.background_prompt && (
                             <Button 
                               size="sm" 
-                              variant="outline" 
+                              variant="secondary" 
                               className="mt-1 text-xs"
                               onClick={() => updateScriptLine(line.id, { background_prompt: generateBackgroundPrompt(line.scene_id!) })}
                             >

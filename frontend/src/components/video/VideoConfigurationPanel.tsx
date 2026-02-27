@@ -1,5 +1,5 @@
 import React from 'react';
-import { VideoProject } from '../../types/video';
+import { BackgroundStyle, VideoProject, VideoResolution } from '../../types/video';
 import { Card } from '../ui/Card';
 
 interface VideoConfigurationPanelProps {
@@ -104,7 +104,7 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
           </label>
           <select
             value={project.resolution}
-            onChange={(e) => handleChange('resolution', e.target.value)}
+            onChange={(e) => handleChange('resolution', e.target.value as VideoResolution)}
             className="w-full p-2 border rounded-md"
           >
             <option value="720p">720p (1280x720)</option>
@@ -121,7 +121,7 @@ export const VideoConfigurationPanel: React.FC<VideoConfigurationPanelProps> = (
           </label>
           <select
             value={project.background_style}
-            onChange={(e) => handleChange('background_style', e.target.value)}
+            onChange={(e) => handleChange('background_style', e.target.value as BackgroundStyle)}
             className="w-full p-2 border rounded-md"
           >
             <option value="anime">Anime</option>

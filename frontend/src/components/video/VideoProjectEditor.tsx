@@ -108,7 +108,7 @@ export const VideoProjectEditor: React.FC<VideoProjectEditorProps> = ({
         </div>
         <div className="flex gap-3">
           {saving && <span className="text-sm text-gray-500">Saving...</span>}
-          <Button onClick={onClose} variant="outline">Close</Button>
+          <Button onClick={onClose} variant="secondary">Close</Button>
         </div>
       </div>
 
@@ -326,7 +326,7 @@ const ExportTab: React.FC<{
               <Button onClick={onGenerateJSON}>
                 Preview JSON
               </Button>
-              <Button onClick={onDownload} variant="outline">
+              <Button onClick={onDownload} variant="secondary">
                 Download JSON
               </Button>
             </div>

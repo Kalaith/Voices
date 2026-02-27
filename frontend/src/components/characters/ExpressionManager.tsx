@@ -185,7 +185,7 @@ export const ExpressionManager: React.FC<ExpressionManagerProps> = ({
                 Save Expression
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => {
                   setEditingEmotion(null);
                   setExpressionPrompt('');

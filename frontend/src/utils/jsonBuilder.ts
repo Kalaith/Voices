@@ -13,18 +13,21 @@ import {
   PortraitConfig
 } from '../types/videoServiceSchema';
 
+interface ProjectCharacter {
+  character_name?: string;
+  character_display_name?: string;
+  base_portrait_url?: string;
+  voice_profile_id?: number;
+  voice_name?: string;
+  voice_parameters?: string;
+  line_count: number;
+  scene_count: number;
+}
+
 export interface ProjectWithFullData extends VideoProject {
   script_lines?: VideoScriptLine[];
   scenes?: VideoScene[];
-  characters?: Array<{
-    character_name?: string;
-    character_display_name?: string;
-    base_portrait_url?: string;
-    voice_profile_id?: number;
-    voice_name?: string;
-    line_count: number;
-    scene_count: number;
-  }>;
+  characters?: ProjectCharacter[];
   voices?: Voice[];
 }
 
@@ -92,7 +95,7 @@ export class JsonBuilder {
    * Build voice configuration for a character
    */
   private static buildVoiceConfig(
-    character: ProjectWithFullData['characters'][number],
+    character: ProjectCharacter,
     _project: ProjectWithFullData
   ): VoiceConfig {
     // Default voice config
@@ -105,11 +108,9 @@ export class JsonBuilder {
     };
 
     // Parse voice parameters if available
-    if (character.voice_name) {
+    if (character.voice_name && character.voice_parameters) {
       try {
-        const params = typeof character === 'object' && 'voice_parameters' in character
-          ? JSON.parse(character.voice_parameters as string)
-          : {};
+        const params = JSON.parse(character.voice_parameters) as Partial<VoiceConfig>;
 
         return {
           ...defaultConfig,
@@ -133,7 +134,7 @@ export class JsonBuilder {
    * Build portrait configuration for a character
    */
   private static buildPortraitConfig(
-    character: ProjectWithFullData['characters'][number]
+    character: ProjectCharacter
   ): PortraitConfig {
     return {
       position: 'left', // Default position

@@ -29,17 +29,15 @@ export const VoiceCreator: React.FC<VoiceCreatorProps> = ({ onVoiceCreated, onCl
       id: crypto.randomUUID(),
       name: name.trim(),
       description: description.trim() || undefined,
-      parameters: {
-        speed,
-        pitch,
-        temperature,
-        top_p: topP,
-        top_k: topK,
-        seed,
-        batch_size: batchSize,
-        exaggeration,
-        cfg_weight: cfgWeight,
-      },
+      speed,
+      pitch,
+      temperature,
+      top_p: topP,
+      top_k: topK,
+      seed,
+      batch_size: batchSize,
+      exaggeration,
+      cfg_weight: cfgWeight,
     };
 
     onVoiceCreated(voice);

@@ -1,8 +1,32 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+type ClassValue = string | number | null | undefined | false | Record<string, boolean> | ClassValue[];
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+export function cn(...inputs: ClassValue[]): string {
+  const classNames: string[] = [];
+
+  const addValue = (value: ClassValue): void => {
+    if (!value) {
+      return;
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      classNames.push(String(value));
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach(addValue);
+      return;
+    }
+
+    Object.entries(value).forEach(([key, enabled]) => {
+      if (enabled) {
+        classNames.push(key);
+      }
+    });
+  };
+
+  inputs.forEach(addValue);
+  return classNames.join(' ');
 }
 
 export function formatParameterValue(key: string, value: number): string {

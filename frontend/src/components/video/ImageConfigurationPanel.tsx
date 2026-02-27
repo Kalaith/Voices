@@ -52,7 +52,7 @@ export const ImageConfigurationPanel: React.FC<ImageConfigurationPanelProps> = (
           </label>
           <select
             value={localConfig.generation_mode}
-            onChange={(e) => handleChange('generation_mode', e.target.value)}
+            onChange={(e) => handleChange('generation_mode', e.target.value as ImageConfig['generation_mode'])}
             className="w-full p-2 border rounded-md"
           >
             {IMAGE_GENERATION_MODES.map(mode => (

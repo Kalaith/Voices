@@ -248,7 +248,7 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
               <Button onClick={handleCreateCharacter} disabled={loading}>
                 {loading ? 'Creating...' : 'Create Character'}
               </Button>
-              <Button variant="outline" onClick={() => setIsCreating(false)} disabled={loading}>
+              <Button variant="secondary" onClick={() => setIsCreating(false)} disabled={loading}>
                 Cancel
               </Button>
             </div>
@@ -312,7 +312,7 @@ export const CharacterManager: React.FC<CharacterManagerProps> = ({ onCharacterS
               <Button onClick={handleUpdateCharacter} disabled={loading}>
                 {loading ? 'Updating...' : 'Update Character'}
               </Button>
-              <Button variant="outline" onClick={() => setEditingCharacter(null)} disabled={loading}>
+              <Button variant="secondary" onClick={() => setEditingCharacter(null)} disabled={loading}>
                 Cancel
               </Button>
             </div>

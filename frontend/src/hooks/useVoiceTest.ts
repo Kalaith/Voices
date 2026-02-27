@@ -9,6 +9,10 @@ interface VoiceTestState {
   audioUrl: string | null;
 }
 
+interface GenerateAudioResponse {
+  audio_url: string;
+}
+
 export const useVoiceTest = () => {
   const [testStates, setTestStates] = useState<Record<string, VoiceTestState>>({});
 
@@ -39,7 +43,7 @@ export const useVoiceTest = () => {
 
     try {
       // Call the backend API to generate test audio
-      const response = await apiService.post('/audio/generate', {
+      const response = await apiService.post<GenerateAudioResponse>('/audio/generate', {
         text: sampleText,
         voice: voice
       });

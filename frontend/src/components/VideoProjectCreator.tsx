@@ -203,7 +203,7 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
               >
                 <option value="">Select a script...</option>
                 {scripts.map(script => (
-                  <option key={script.id} value={script.id}>{script.title}</option>
+                  <option key={script.id} value={script.id}>{script.name}</option>
                 ))}
               </select>
             </div>
@@ -244,7 +244,7 @@ export const VideoProjectCreator: React.FC<VideoProjectCreatorProps> = ({
               <Button onClick={handleCreateProject} disabled={loading}>
                 {loading ? 'Creating...' : 'Create Project'}
               </Button>
-              <Button variant="outline" onClick={() => setIsCreating(false)} disabled={loading}>
+              <Button variant="secondary" onClick={() => setIsCreating(false)} disabled={loading}>
                 Cancel
               </Button>
             </div>

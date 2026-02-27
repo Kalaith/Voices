@@ -49,7 +49,7 @@ export const ScriptGenerationConfig: React.FC<ScriptGenerationConfigProps> = ({
           </label>
           <select
             value={localConfig.generation_mode}
-            onChange={(e) => handleChange('generation_mode', e.target.value)}
+            onChange={(e) => handleChange('generation_mode', e.target.value as ScriptGenerationConfigData['generation_mode'])}
             className="w-full p-2 border rounded-md"
           >
             {GENERATION_MODES.map(mode => (

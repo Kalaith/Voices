@@ -96,7 +96,7 @@ export const JsonPreview: React.FC<JsonPreviewProps> = ({
       {/* Actions */}
       {showActions && (
         <div className="flex gap-3">
-          <Button onClick={handleCopy} variant="outline">
+          <Button onClick={handleCopy} variant="secondary">
             {copied ? '✓ Copied!' : 'Copy to Clipboard'}
           </Button>
           {onDownload && (
@@ -161,7 +161,7 @@ export const JsonPreviewModal: React.FC<JsonPreviewModalProps> = ({
 
         {/* Footer */}
         <div className="flex justify-end gap-3 p-6 border-t">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
         </div>

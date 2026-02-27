@@ -67,7 +67,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             {onEdit && (
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={() => onEdit(character)}
               >
                 Edit
@@ -76,7 +76,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             {onDelete && (
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={() => onDelete(character)}
                 className="text-red-600 hover:bg-red-50"
               >
