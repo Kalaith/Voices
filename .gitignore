@@ -141,3 +141,5 @@ dmypy.json
 .yarn/install-state.gz
 .pnp.*
 *.mp4
+
+**/.env*
