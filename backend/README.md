@@ -6,7 +6,7 @@ PHP backend API for the Voice Generator application.
 
 1. Install dependencies:
 ```bash
-composer install
+composer install --working-dir=../../..
 ```
 
 2. Setup database:
